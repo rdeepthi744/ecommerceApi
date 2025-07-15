@@ -1,0 +1,4 @@
+{
+  "build": "mvn clean install -DskipTests",
+  "start": "java -jar target/ecommerce-api-0.0.1-SNAPSHOTT.jar"
+}
