@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ecommerce-api
+    env: java
+    buildCommand: "./mvnw clean install"
+    startCommand: "java -jar target/ecommerce-api-0.0.1-SNAPSHOT.jar"
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:mysql://<your-host>:3306/<your-db>
+      - key: SPRING_DATASOURCE_USERNAME
+        value: <your-username>
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: <your-password>
