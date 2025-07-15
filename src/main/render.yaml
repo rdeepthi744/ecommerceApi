@@ -8,6 +8,6 @@ services:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:mysql://<your-host>:3306/<your-db>
       - key: SPRING_DATASOURCE_USERNAME
-        value: <your-username>
+        value: root
       - key: SPRING_DATASOURCE_PASSWORD
-        value: <your-password>
+        value: bow2903
