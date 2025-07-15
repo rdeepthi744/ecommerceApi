@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h2>Your Shopping Cart</h2>
+    <nav>
+      <a href="index.html">🏠 Products</a>
+      <a href="order.html">📦 Orders</a>
+      <button onclick="logout()">Logout</button>
+    </nav>
+  </header>
+
+  <div id="cart-items"></div>
+  <button onclick="placeOrder()">Place Order</button>
+
+  <script src="js/utils.js"></script>
+  <script src="js/cart.js"></script>
+</body>
+</html>
