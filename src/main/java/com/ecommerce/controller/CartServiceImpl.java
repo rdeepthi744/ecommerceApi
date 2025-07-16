@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CartServiceImpl implements CartService {
+public abstract class CartServiceImpl implements CartService {
 
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
@@ -62,6 +62,24 @@ public class CartServiceImpl implements CartService {
     public void clearCart(User user) {
         cartItemRepository.deleteByUser(user);
     }
+
+	@Override
+	public CartItem addToCart(Long userId, Long productId, int quantity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void removeCartItem(Long cartItemId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<CartItem> getCartItemsByUserId(Long userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 
 
