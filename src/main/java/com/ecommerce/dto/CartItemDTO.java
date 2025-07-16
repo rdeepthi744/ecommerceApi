@@ -1,27 +1,18 @@
 package com.ecommerce.dto;
 
 public class CartItemDTO {
-    private Long cartItemId;
     private Long productId;
     private String productName;
     private int quantity;
     private double price;
 
-    public CartItemDTO(Long cartItemId, Long productId, String productName, int quantity, double price) {
-        this.cartItemId = cartItemId;
+    public CartItemDTO() {}
+
+    public CartItemDTO(Long productId, String productName, int quantity, double price) {
         this.productId = productId;
         this.productName = productName;
         this.quantity = quantity;
         this.price = price;
-    }
-
-    // Getters and setters
-    public Long getCartItemId() {
-        return cartItemId;
-    }
-
-    public void setCartItemId(Long cartItemId) {
-        this.cartItemId = cartItemId;
     }
 
     public Long getProductId() {

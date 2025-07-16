@@ -1,5 +1,9 @@
+
+
+//CartServiceImpl.java
 package com.ecommerce.service.impl;
 
+import com.ecommerce.dto.AddToCartRequest;
 import com.ecommerce.dto.CartItemDTO;
 import com.ecommerce.entity.CartItem;
 import com.ecommerce.entity.Product;
@@ -7,6 +11,7 @@ import com.ecommerce.entity.User;
 import com.ecommerce.repository.CartItemRepository;
 import com.ecommerce.repository.ProductRepository;
 import com.ecommerce.service.CartService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,46 +20,56 @@ import java.util.stream.Collectors;
 @Service
 public class CartServiceImpl implements CartService {
 
-    private final CartItemRepository cartItemRepository;
-    private final ProductRepository productRepository;
+ @Autowired
+ private CartItemRepository cartItemRepository;
 
-    public CartServiceImpl(CartItemRepository cartItemRepository, ProductRepository productRepository) {
-        this.cartItemRepository = cartItemRepository;
-        this.productRepository = productRepository;
-    }
+ @Autowired
+ private ProductRepository productRepository;
 
-    @Override
-    public void addToCart(User user, Long productId, int quantity) {
-        Product product = productRepository.findById(productId).orElseThrow();
-        CartItem item = new CartItem();
-        item.setUser(user);
-        item.setProduct(product);
-        item.setQuantity(quantity);
-        cartItemRepository.save(item);
-    }
+ @Override
+ public void addToCart(AddToCartRequest request, User user) {
+     Product product = productRepository.findById(request.getProductId())
+             .orElseThrow(() -> new RuntimeException("Product not found"));
 
-    @Override
-    public List<CartItemDTO> getCartItems(User user) {
-        return cartItemRepository.findByUser(user).stream()
-                .map(item -> new CartItemDTO(
-                        item.getId(),
-                        item.getProduct().getId(),
-                        item.getProduct().getName(),
-                        item.getQuantity(),
-                        item.getProduct().getPrice()
-                ))
-                .collect(Collectors.toList());
-    }
+     CartItem existingItem = cartItemRepository.findByUserAndProduct(user, product);
 
-    @Override
-    public void removeFromCart(User user, Long productId) {
-        CartItem item = cartItemRepository.findByUserAndProductId(user, productId).orElseThrow();
-        cartItemRepository.delete(item);
-    }
+     if (existingItem != null) {
+         existingItem.setQuantity(existingItem.getQuantity() + request.getQuantity());
+         existingItem.setPrice(product.getPrice() * existingItem.getQuantity());
+         cartItemRepository.save(existingItem);
+     } else {
+         CartItem newItem = new CartItem();
+         newItem.setUser(user);
+         newItem.setProduct(product);
+         newItem.setQuantity(request.getQuantity());
+         newItem.setPrice(product.getPrice() * request.getQuantity());
+         cartItemRepository.save(newItem);
+     }
+ }
 
-    @Override
-    public void clearCart(User user) {
-        List<CartItem> items = cartItemRepository.findByUser(user);
-        cartItemRepository.deleteAll(items);
-    }
+ @Override
+ public List<CartItemDTO> getCartItems(User user) {
+     List<CartItem> items = cartItemRepository.findByUser(user);
+
+     return items.stream().map(item -> {
+         CartItemDTO dto = new CartItemDTO();
+         dto.setProductId(item.getProduct().getId());
+         dto.setProductName(item.getProduct().getName());
+         dto.setQuantity(item.getQuantity());
+         dto.setPrice(item.getPrice());
+         return dto;
+     }).collect(Collectors.toList());
+ }
+
+ @Override
+ public void removeFromCart(Long productId, User user) {
+     Product product = productRepository.findById(productId)
+             .orElseThrow(() -> new RuntimeException("Product not found"));
+     cartItemRepository.deleteByUserAndProduct(user, product);
+ }
+
+ @Override
+ public void clearCart(User user) {
+     cartItemRepository.deleteByUser(user);
+ }
 }

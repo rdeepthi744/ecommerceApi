@@ -10,15 +10,30 @@ public class CartItem {
     private Long id;
 
     @ManyToOne
+    private User user;
+
+    @ManyToOne
     private Product product;
 
     private int quantity;
 
-    @ManyToOne
-    private User user;
+    private double price;
 
+    // Getters and setters
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Product getProduct() {
@@ -37,11 +52,16 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public User getUser() {
-        return user;
+    public double getPrice() {
+        return price;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPrice(double price) {
+        this.price = price;
     }
+
+	public CartItem orElse(CartItem cartItem) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
